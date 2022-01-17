@@ -1,0 +1,424 @@
+<app-navbar [adminId]="adminId"></app-navbar>
+
+<nav class="navbar navbar-dark bg-dark">
+    <div class="col text-center">
+        <header>
+            <h1 style="color: rgb(255, 255, 255);"><i class="bi bi-lightning-fill"></i> Panel Admin <i
+                    class="bi bi-lightning-fill"></i></h1>
+        </header>
+    </div>
+</nav>
+
+<nav class="navbar navbar-light" style="background-color: #e3f2fd;">
+
+
+    <li class="nav-item dropdown p-1">
+        <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" style="color:#000000d3;">
+            <i class="bi bi-gear"></i> articulos
+        </a>
+
+        <ul class="dropdown-menu">
+            <li><a class="dropdown-item" [routerLink]="['/',adminId,'manufacturados','form']">agregar articulo
+                    manofacturado</a></li>
+            <li><a class="dropdown-item" [routerLink]="['/insumo',adminId,'form']">agregar articulo insumo</a></li>
+
+        </ul>
+    </li>
+
+
+
+    <li class="nav-item dropdown p-3">
+        <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" style="color:#000000d3;">
+            <i class="bi bi-gear"></i> usuarios
+        </a>
+
+        <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#" [routerLink]="['/register/admin',adminId]">agregar usuario</a></li>
+
+        </ul>
+    </li>
+
+
+    <button type="button" class="btn btn-primary" (click)="listarUsuarios()"><i class="bi bi-person-square"></i> Listar
+        Usuarios</button>
+    <button type="button" class="btn btn-primary" (click)="listarArticuloManofacturados()"><i
+            class="bi bi-egg-fried"></i> Listar Articulos
+        Manofacturados</button>
+    <button type="button" class="btn btn-primary" (click)="listarArticuloInsumos(true)"><i class="bi bi-egg"></i> Listar
+        Articulos
+        insumo </button>
+    <button type="button" class="btn btn-primary" (click)="listarArticuloInsumos(false)"><i class="bi bi-cup-straw"></i>
+        Listar Bebidas</button>
+    <div class="dropdown py-3">
+
+        <button class="btn btn-warning dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown"
+            aria-expanded="false">
+            <i class="bi bi-gear"></i> Rubros
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+            <li>
+                <a class="dropdown-item" [routerLink]="['/admin',adminId,'rubro','articulo']">Crear Rubro de Articulo
+                    Insumo</a>
+            </li>
+            <li>
+                <a class="dropdown-item" [routerLink]="['/admin',adminId,'rubro','general']">Crear Rubro General de
+                    Manufacturado</a>
+            </li>
+
+        </ul>
+    </div>
+    <button type="button" class="btn btn-warning" (click)="listarRubrosGeneral()"> <i class="bi bi-list-ul"></i> Listar
+        Rubros de Articulos
+        Manufacturados</button>
+    <button type="button" class="btn btn-warning" (click)="listarRubrosArticulo()"><i class="bi bi-list-ul"></i> Listar
+        Rubros de Articulos
+        Insumos</button>
+    <button type="button" class="btn btn-warning" (click)="listarPedidos()"><i class="bi bi-list-ul"></i> Listar
+        Pedidos</button>
+    <button type="button" class="btn btn-info" (click)="mostrarConfiguracion()">
+        <i class="bi bi-info-circle"></i> Inf. Empresa</button>
+
+</nav>
+<div class="card text-white bg-secondary mb-3 ">
+
+
+
+    <!-- Button trigger modal -->
+    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        <i class="bi bi-table"></i> REPORTES
+    </button>
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" style="color: black;">REPORTES EXCEL</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="dropdown">
+                    <button class="btn btn-warning dropdown-toggle p-2 m-2 b-2" type="button" id="dropdownMenuButton1"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        TIPO REPORTE {{opcion}}
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                        <li><a class="dropdown-item" (click)="setTipoReporte(1)">Mejor Cliente</a></li>
+                        <li><a class="dropdown-item" (click)="setTipoReporte(2)">Mejor Articulo Manufacturado</a></li>
+                        <li><a class="dropdown-item" (click)="setTipoReporte(3)">Ingresos</a></li>
+                        <li><a class="dropdown-item" (click)="setTipoReporte(4)">Ganancias</a></li>
+                        <li><a class="dropdown-item" >Pedidos</a></li>
+                    </ul>
+                </div>
+                <div class="modal-body">
+
+                    <div class="card b-2 m-2 p-3 bg-info">
+                        <h4 style="color: rgb(255, 255, 255); padding: 15px;">Fecha Desde</h4>
+                        <input type="datetime-local" [(ngModel)]="reporte.fechaInicio">
+                    </div>
+
+                    <div class="card b-2 m-2 p-3 bg-info">
+                        <h4 style="color: rgb(255, 255, 255); padding: 15px;">Fecha Hasta</h4>
+                        <input type="datetime-local" [(ngModel)]="reporte.fechaDestino">
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" (click)="generarReporte()">GENERAR</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+
+
+<body *ngIf="listarUsuario">
+
+
+    <form class="d-flex" style="margin: 10px;">
+        <input class="form-control p-2 m-2 b-2 py-2" name="filterPost" type="search" placeholder="Buscar usuario"
+            aria-label="Search" [(ngModel)]="
+                filterPost" style=" width: 220px;">
+    </form>
+
+    <body *ngFor="let usuario of usuarios | filterUsuario:filterPost">
+
+        <div class="card text-white bg-dark p-2 m-2 b-2 py-2" *ngIf=" (usuario.fechaBaja)===null">
+            <tr>
+                <td>
+            <tr>
+                <a>* {{usuario.cliente.nombre}} {{usuario.cliente.apellido}}</a>
+            </tr>
+            <tr>
+                <a>
+                    * {{usuario.cliente.email}}
+                </a>
+            </tr>
+            <tr>
+                <a class="badge bg-primary p-2 m-2 b-2 py-2">
+                    {{usuario.rol}}
+                </a>
+            </tr>
+            </td>
+            </tr>
+            <td>
+                <button type="button" class="btn btn-warning p-2 m-2 b-2 py-2" (click)="editarUsuario(usuario.id)"
+                    routerLinkActive="active">Editar</button>
+                <button type="button" class="btn btn-danger p-2 m-2 b-2 py-2" (click)="borrarUsuario(usuario)"
+                    routerLinkActive="active"><i class="bi bi-trash-fill"></i> Eliminar</button>
+            </td>
+        </div>
+
+    </body>
+</body>
+
+
+<body *ngIf="listarArticuloManofacturado">
+
+    <form class="d-flex" style="margin: 10px;">
+        <input class="form-control p-2 m-2 b-2 py-2" name="filterPost" type="search" placeholder="Buscar manufacturado"
+            aria-label="Search" [(ngModel)]="
+                filterPost" style=" width: 220px;">
+    </form>
+
+    <body *ngFor="let articulo of ArticuloManofacturado | filter:filterPost">
+
+        <div class="card text-white bg-dark p-2 m-2 b-2 py-2" *ngIf=" (articulo.fechaBaja)===null">
+            <tr>
+                <td>
+                    <div>
+                        <img *ngIf="articulo.imagen" [src]="formatImage(articulo.imagen)"
+                            class="img-thumbnail rounded p-2 m-2 b-2 py-2" style="width: 250px; cursor:pointer;">
+                    </div>
+                </td>
+
+                <td>
+            <tr>
+                <a> * {{articulo.denominacion}}</a>
+            </tr>
+            <tr>
+                <a>
+                    * $ {{articulo.precioVenta}}
+
+                </a>
+            </tr>
+            <tr>
+                <a>
+                    Tiempo Cocina: {{articulo.tiempoEstimadoCocina}} min
+                </a>
+            </tr>
+
+            </td>
+
+            </tr>
+            <td>
+                <button type="button" class="btn btn-warning p-2 m-2 b-2 py-2"
+                    [routerLink]="['/',adminId,'manufacturados','form', articulo.id]"
+                    routerLinkActive="active">Editar</button>
+                <button type="button" class="btn btn-danger p-2 m-2 b-2 py-2"
+                    (click)="borrarArticuloManofacturado(articulo)" routerLinkActive="active"><i
+                        class="bi bi-trash-fill"></i> Eliminar</button>
+            </td>
+        </div>
+    </body>
+</body>
+
+<body *ngIf="listarArticuloInsumo">
+
+    <form class="d-flex" style="margin: 10px;">
+        <input class="form-control me-2 p-2 m-2 b-2 py-2" name="filterPost" type="search" placeholder="Buscar insumo"
+            aria-label="Search" [(ngModel)]="
+                filterPost" style=" width: 220px;">
+    </form>
+
+    <body *ngFor="let articulo of articuloInsumoArr | filterInsumo:filterPost">
+
+        <div class="card text-white bg-dark p-2 m-2 b-2 py-2" *ngIf=" (articulo.fechaBaja)===null">
+            <tr>
+                <td>
+                    <div>
+                        <a href=''>
+
+
+                        </a>
+                    </div>
+                </td>
+
+                <td>
+            <tr>
+                <p></p>
+                <h2> * {{articulo.denominacion}}</h2>
+            </tr>
+            <tr>
+                <a>
+                    precio venta: ${{articulo.precioVenta}}
+
+                </a>
+            </tr>
+            <tr>
+                <a>
+                    precio compra: ${{articulo.precioCompra}}
+
+                </a>
+            </tr>
+            <tr>
+                <a>
+                    Stock actual: {{acortarDecimales(articulo.stockActual)}}
+                </a>
+            </tr>
+            <tr>
+                <a>
+                    Stock minimo: {{articulo.stockMinimo}}
+                </a>
+            </tr>
+            <tr>
+                <a>
+                    Unidad medida: {{articulo.unidadMedida}}
+                </a>
+            </tr>
+            <tr>
+                <a>
+                    Es insumo: {{articulo.esInsumo}}
+                </a>
+            </tr>
+
+            </td>
+
+            </tr>
+            <td>
+                <button type="button" class="btn btn-success p-2 m-2 b-2 py-2" (click)="aumentarStockInsumo(articulo)"
+                    routerLinkActive="active">Aumentar Stock</button>
+                <button type="button" class="btn btn-warning p-2 m-2 b-2 py-2"
+                    [routerLink]="['/insumo',adminId,'form',articulo.id]" routerLinkActive="active">Editar</button>
+                <button type="button" class="btn btn-danger p-2 m-2 b-2 py-2" (click)="borrarInsumo(articulo)"
+                    routerLinkActive="active"><i class="bi bi-trash-fill"></i> Eliminar</button>
+            </td>
+        </div>
+    </body>
+</body>
+
+<body *ngIf="listarRubroArticulo">
+
+
+    <form class="d-flex" style="margin: 10px;">
+        <input class="form-control me-2" name="filterPost" type="search" placeholder="Buscar rubro" aria-label="Search"
+            [(ngModel)]="
+                    filterPost" style=" width: 220px;">
+    </form>
+
+    <body *ngFor="let rubro of rubroArticuloArr | filterInsumo:filterPost">
+
+        <div class="card text-white bg-dark p-2 m-2 b-2 py-2" *ngIf="(rubro.fechaBaja)===null">
+            <tr>
+                <td>
+            <tr>
+                <a>* {{rubro.denominacion}} </a>
+            </tr>
+            <tr>
+                <a class="badge bg-primary p-2 m-2 b-2 py-2" *ngIf="rubro?.padre?.denominacion">
+                    * Rubro padre: {{rubro?.padre?.denominacion}}
+                </a>
+            </tr>
+
+            </td>
+            </tr>
+            <td>
+                <button type="button" class="btn btn-warning p-2 m-2 b-2 py-2"
+                    [routerLink]="['/admin',adminId,'rubro','articulo',rubro.id]"
+                    routerLinkActive="active">Editar</button>
+                <button type="button" class="btn btn-danger p-2 m-2 b-2 py-2" (click)="eliminarRubroArticulo(rubro)"
+                    routerLinkActive="active"><i class="bi bi-trash-fill"></i> Eliminar</button>
+            </td>
+        </div>
+
+    </body>
+</body>
+
+<body *ngIf="listarRubroGeneral">
+
+
+    <form class="d-flex" style="margin: 10px;">
+        <input class="form-control p-2 m-2 b-2 py-2" name="filterPost" type="search" placeholder="Buscar rubro"
+            aria-label="Search" [(ngModel)]="
+                    filterPost" style=" width: 220px;">
+    </form>
+
+    <body *ngFor="let rubro of rubroGeneralArr | filterInsumo:filterPost">
+
+        <div class="card text-white bg-dark p-2 m-2 b-2 py-2" *ngIf="(rubro.fechaBaja)===null">
+            <tr>
+                <td>
+            <tr>
+                <a>* {{rubro.denominacion}}</a>
+            </tr>
+
+            </td>
+            </tr>
+            <td>
+                <button type="button" class="btn btn-warning p-2 m-2 b-2 py-2"
+                    [routerLink]="['/admin',adminId,'rubro','general',rubro.id]"
+                    routerLinkActive="active">Editar</button>
+                <button type="button" class="btn btn-danger p-2 m-2 b-2 py-2" (click)="eliminarRubroGeneral(rubro)"
+                    routerLinkActive="active"><i class="bi bi-trash-fill"></i> Eliminar</button>
+            </td>
+        </div>
+
+    </body>
+
+
+</body>
+
+<body *ngIf="listarPedido">
+
+    <div class="card text-dark bg-white m-2 b-2">
+        <!---input type="date" name="begin" placeholder="dd-mm-yyyy" [(ngModel)]="filterPost"--->
+        <div class="card b-2 m-2 p-3 bg-info">
+            <h4 style="color: rgb(255, 255, 255); padding: 15px;">Fecha Desde</h4>
+            <input type="datetime-local" [(ngModel)]="reporte.fechaInicio">
+        </div>
+
+        <div class="card b-2 m-2 p-3 bg-info">
+            <h4 style="color: rgb(255, 255, 255); padding: 15px;">Fecha Hasta</h4>
+            <input type="datetime-local" [(ngModel)]="reporte.fechaDestino">
+        </div>
+
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary" (click)="filtrarPedidosXFecha()">Filtrar por Fecha</button>
+        </div>
+
+        <div class="modal-footer">
+            <button type="button" class="btn btn-warning" (click)="exportarPedidosExcel()">Exportar a Excel</button>
+        </div>
+
+        <a *ngFor="let pedido of Pedidos">
+            <a> 
+                <div class="card text-white bg-dark m-2 b-2">
+                        <tr>
+                            <a>Número de pedido: {{pedido.id}}</a>
+                        </tr>
+                        <tr *ngIf="pedido?.cliente?.email">
+                            <b>Cliente: {{pedido.cliente.email}}</b>
+                        </tr>
+                        <tr>
+                            <a>Fecha: {{pedido.fecha | date:"medium"}}</a>
+                        </tr>
+                        <tr>
+                            <a>Total: ${{pedido.total}}</a>
+                        </tr>
+                        <tr>
+                            <a *ngIf="pedido.estado===0" class="badge bg-warning">Por aceptar</a>
+                            <a *ngIf="pedido.estado===1"class="badge bg-warning">Pendiente</a>
+                            <a *ngIf="pedido.estado===2" class="badge bg-warning">En proceso</a>
+                            <a *ngIf="pedido.estado===3" class="badge bg-success">Terminado</a>
+                            <a *ngIf="pedido.estado===6" class="badge bg-success">Entregado</a>
+                        </tr>
+                </div>
+
+            </a>
+        </a>
+    </div>
+
+
+</body>

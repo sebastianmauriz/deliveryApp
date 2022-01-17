@@ -1,0 +1,165 @@
+<!-- NAVIGATION -->
+
+<nav class="navbar navbar-expand-lg sticky-top navbar-dark bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" [routerLink]="['/home',usuarioId]" *ngIf="usuarioId">
+      <img src="assets/images/logo1.png" alt="El Buen Sabor" style="width: 100%">
+
+    </a>
+    <a class="navbar-brand" [routerLink]="['/home',adminId]" *ngIf="adminId">
+      <img src="assets/images/logo1.png" alt="El Buen Sabor" style="width: 100%">
+
+    </a>
+    <a class="navbar-brand" routerLink="/home" *ngIf="!adminId && !usuarioId">
+      <img src="assets/images/logo1.png" alt="El Buen Sabor" style="width: 100%">
+
+    </a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+
+        <li class="nav-item">
+          <a type="button" class="nav-link" (click)="acercaDe()">Acerca de...</a>
+        </li>
+
+      </ul>
+
+
+    </div>
+
+  </div>
+
+  <form class="d-flex">
+    <button *ngIf="validarLogin == false && botonIngVisible != false" class="btn btn-outline-success"
+      routerLink="/login" routerLinkActive="active">
+      <i class="bi bi-door-open"></i>Ingresar
+    </button>
+  </form>
+
+  <li *ngIf="(usuario?.cliente?.id && usuario?.rol == 'user' || usuario?.rol == 'userg') 
+  && (articuloInsumoCarrito != undefined || articulosManofaturadosCarrito != undefined)"
+    class="nav-item dropdown p-5 b-2 m-2">
+    <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" style="color:orange;">
+      <i class="bi bi-cart3"></i> CARRITO
+    </a>
+
+
+    <ul class="dropdown-menu">
+      <div class="card m-2 b-2" style="width: 18rem;" *ngFor="let articulo of articulosManofaturadosCarrito">
+        <div class="card-body">
+          <button type="submit" class="btn btn-warning m-2 b-2" style="position: absolute; top: 0; right:0;"
+            (click)="eliminarArticuloManofacturadoDelCarro(articulo.id)">x</button>
+          <h6 class="card-title p-3">
+            {{articulo.denominacion}}
+
+          </h6>
+
+          <img *ngIf="articulo.imagen" [src]="formatImage(articulo.imagen)" class="img-thumbnail rounded"
+            style="width: 250px; cursor:pointer;">
+
+          <p>Tiempo estimado de cocina:{{articulo.tiempoEstimadoCocina}}</p>
+          <h6 class="card-subtitle mb-2 text-muted">${{articulo.precioVenta}}</h6>
+
+        </div>
+
+      </div>
+
+      <li>
+        <hr class="dropdown-divider">
+      </li>
+      <div class="card m-2 b-2" style="width: 18rem;" *ngFor="let articulo of articuloInsumoCarrito">
+        <div class="card-body">
+          <button type="submit" class="btn btn-warning m-2 b-2" style="position: absolute; top: 0; right:0;"
+            (click)="eliminarInsumoDelCarro(articulo.id)">x</button>
+          <h6 class="card-title">
+            {{articulo.denominacion}}
+
+          </h6>
+
+          <h6 class="card-subtitle mb-2 text-muted">${{articulo.precioVenta}}</h6>
+
+        </div>
+      </div>
+      <div class="col text-center">
+
+
+        <button *ngIf="articuloInsumoCarrito.length > 0 || articulosManofaturadosCarrito.length > 0" type="submit"
+          (click)="comprar()" class="btn btn-success m-2 b-2">COMPRAR</button>
+
+
+        <a class="badge bg-danger p-2 m-2 b-2 py-2" style="font-size: 15px;"
+          *ngIf="articuloInsumoCarrito.length < 1 && articulosManofaturadosCarrito.length < 1">
+          *No hay articulos en el carrito! <i class="bi bi-emoji-frown"></i>
+        </a>
+      </div>
+    </ul>
+  </li>
+
+
+  <li *ngIf="usuarioId || adminId" class="nav-item dropdown p-3 b-5 m-3">
+    <a *ngIf="usuarioId" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"
+      style="color:orange;">
+      <i class="bi bi-person-circle"></i> {{usuario?.cliente?.email}}
+    </a>
+    <a *ngIf="adminId" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"
+      style="color:orange;">
+      {{usuarioAdmin?.cliente?.email}}
+    </a>
+
+    <ul class="dropdown-menu">
+      <li><a *ngIf="usuario" class="dropdown-item" [routerLink]="['/home', usuario?.id]">
+          <i class="bi bi-window"></i> Inicio</a>
+      </li>
+      <li><a *ngIf="usuarioAdmin" class="dropdown-item" [routerLink]="['/home', usuarioAdmin?.id]">
+          <i class="bi bi-window"></i> Inicio</a>
+      </li>
+      <li><a *ngIf="usuario?.rol != 'userg' && usuario?.rol != 'admin' && usuarioAdmin?.rol != 'admin'"
+          class="dropdown-item" [routerLink]="['/update', usuario?.id]">
+          <i class="bi bi-gear-fill"></i> Editar Cuenta</a></li>
+      <li><a *ngIf="usuarioAdmin?.rol == 'admin' || usuario?.rol == 'admin'" class="dropdown-item"
+          [routerLink]="['/update', usuarioAdmin?.id]">
+          <i class="bi bi-gear-fill"></i> Editar Cuenta</a></li>
+      <li><a class="dropdown-item" [routerLink]="['/updateDomicilio', usuario?.id]">
+          <i class="bi bi-house-door-fill"></i> Editar Domicilio</a></li>
+      <li><a *ngIf="!adminId" class="dropdown-item" [routerLink]="['/historialPedidos/', usuario?.id]">
+          <i class="bi bi-list-ul"></i> Historial de pedidos</a></li>
+
+      <li><a *ngIf="usuario?.rol == 'admin' && !adminId" class="dropdown-item" [routerLink]="['/admin', usuario?.id]"><i
+            class="bi bi-lightning-fill"></i>Panel Admin</a></li>
+      <li>
+      <li><a *ngIf="adminId" class="dropdown-item" [routerLink]="['/admin', adminId]"><i
+            class="bi bi-lightning-fill"></i>Panel Admin</a></li>
+      <li>
+      <li><a *ngIf="adminId" class="dropdown-item" [routerLink]="['/cocinero', adminId]"><i
+            class="bi bi-lightning-fill"></i>Panel Cocinero</a></li>
+      <li>
+      <li><a *ngIf="usuario?.rol == 'cocinero'" class="dropdown-item" [routerLink]="['/cocinero', usuario?.id]"><i
+            class="bi bi-lightning-fill"></i>Panel Cocinero</a></li>
+      <li>
+      <li><a *ngIf="adminId" class="dropdown-item" [routerLink]="['/cajero', adminId]"><i
+            class="bi bi-lightning-fill"></i>Panel Cajero</a></li>
+      <li>
+      <li><a *ngIf="usuario?.rol == 'cajero'" class="dropdown-item" [routerLink]="['/cajero', usuario?.id]"><i
+            class="bi bi-lightning-fill"></i>Panel Cajero</a></li>
+      <li>
+      <li><a *ngIf="adminId" class="dropdown-item" [routerLink]="['/delivery', adminId]"><i
+            class="bi bi-lightning-fill"></i>Panel Delivery</a></li>
+      <li>
+      <li><a *ngIf="usuario?.rol == 'delivery'" class="dropdown-item" [routerLink]="['/delivery', usuario?.id]"><i
+            class="bi bi-lightning-fill"></i>Panel Delivery</a></li>
+      <li>
+        <hr class="dropdown-divider">
+      </li>
+      <li><a class="dropdown-item" routerLink="/home">
+          <i class="bi bi-box-arrow-left"></i> Log Out</a></li>
+    </ul>
+  </li>
+
+</nav>

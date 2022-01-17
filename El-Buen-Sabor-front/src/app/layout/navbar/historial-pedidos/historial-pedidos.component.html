@@ -1,0 +1,74 @@
+<app-navbar [usuarioId]="usuarioId">
+</app-navbar>
+
+<h1 class="card1" *ngIf="listaPedidos.length == 0">
+    <div class="card-body" style="text-align:center;"> 
+      <a [routerLink]="['/home', usuarioId]" class="btn btn-warning" style="font-family: 'Open Sans Condensed', sans-serif; font-size: 25px;"><i class="bi bi-bell-fill"></i> Todavia no ha realizado ningun pedido!</a>
+    </div>
+  </h1>
+<body class="card text-white bg-dark m-4 p-4 border-white " *ngFor="let pedido of listaPedidos">
+    <tr>
+        <h5>Número de pedido: {{pedido.id}}</h5>
+    </tr>
+    <tr>
+        <h5>Fecha del pedido: {{pedido.fecha | date:"dd/MM/yy"}}</h5>
+    </tr>
+    <tr>
+        <h5>Descuento: ${{pedido.factura?.montoDescuento}}</h5>
+    </tr>
+    <tr>
+        <a *ngIf="pedido.estado == 0" class="badge bg-secondary p-2 m-2 b-2 py-2"> Esperando confirmacion del local</a>
+        <a *ngIf="(pedido.estado == 2 || pedido.estado == 1 || pedido.estado == 3) && pedido.tipoEnvio != 5 && pedido.tipoEnvio != 3" class="badge bg-primary p-2 m-2 b-2 py-2"> Tu pedido esta siendo preparado!</a>
+        <a *ngIf="pedido.tipoEnvio == 5 && pedido.estado != 6" class="badge bg-info p-2 m-2 b-2 py-2"> El pedido va en camino!</a>
+        <a *ngIf="pedido.estado == 3 && pedido.tipoEnvio == 3" class="badge bg-info p-2 m-2 b-2 py-2"> Tu pedido esta listo para retirar!</a>
+        <a *ngIf="pedido.estado == 6" class="badge bg-success p-2 m-2 b-2 py-2"> Entregado</a>
+    </tr>
+    <tr>
+        <h5>Total: ${{pedido.total}}</h5>
+    </tr>
+    <tr>
+        <body class="card text-white bg-secondary p-2 m-2 b-2 py-2" >
+            
+            <br>
+            <h5 style="color: white; font-size: 20px;">Detalles:</h5>
+            <br>
+            
+                <div *ngFor="let detalle of pedido.detallePedido">
+                    <div class="card text-dark bg-dark mb-3 p-2 m-2 b-2 py-2" *ngIf="detalle?.articuloManofacturado">
+
+                        <br>
+                        <h5 style="color: white; font-size: 20px;">
+                            {{detalle.articuloManofacturado.denominacion}}
+                        </h5>
+                        <h5 style="color: white; font-size: 20px;">
+                            Sub-Total: ${{detalle.subTotal}}
+                        </h5>
+                        
+                        <div>
+                            <img
+                            [src]="formatImage(detalle.articuloManofacturado.imagen)"
+                            class= "img-thumbnail rounded mx-5"
+                            style= "width: 250px; cursor:pointer;">
+                        </div>
+                    </div>
+                    <div class="card text-dark bg-dark p-2 m-2 b-2 py-2" *ngIf="detalle?.articuloInsumo">
+
+                        <br>
+                        <h5 style="color: white; font-size: 20px;">
+                            {{detalle.articuloInsumo.denominacion}}
+                        </h5>
+                        <h5 style="color: white; font-size: 20px;">
+                            Sub-Total: ${{detalle.subTotal}}
+                        </h5>
+                        
+                    </div>
+                </div>
+        </body>
+    </tr>
+    <br>
+    <button type="button" class="btn" style="background-color:rgb(230, 18, 18); color:rgb(255, 255, 255);" (click)="generatePdf(pedido)" >
+        Mostrar Factura en PDF <i class="bi bi-file-earmark-pdf"></i>
+    </button>
+</body>
+
+
